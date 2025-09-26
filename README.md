@@ -25,7 +25,7 @@ For additional information about creating manually your AWS for Nutanix Cloud Cl
 
 This landing zone is designed for an NC2 on AWS with [**Nutanix Flow Networking**](https://portal.nutanix.com/page/documents/solutions/details?targetId=TN-2028-Nutanix-Cloud-Clusters-on-AWS:flow-virtual-networking-on-aws.html) integration available in AOS 6.8 or more.
 
-<img width='800' src='./images/NC2-AWS-S2S.png'/>  
+<img width='800' src='./images/NC2-AWS-S2S-TGW.png'/>  
 
 IP ranges can be defined/customized by editing [example-configuration.tfvars](example-configuration.tfvars). Then rename example-configuration.tfvars to configuration.tfvars
 
