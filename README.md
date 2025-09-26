@@ -1,7 +1,7 @@
 # Simple-Landing-Zone-for-NC2-on-AWS-With-S2S-VPN-TGW
 This repo contains terraform code to deploy a **simple network landing zone for Nutanix Cloud Cluster (NC2) on AWS with a VPN site to site connection to On-premises Datacenter** (using an AWS Transit Gateway and AWS Site to Site VPN)
 
-<img width='400' src='./images/PlaneLZ.jpeg'/> 
+<img width='400' src='./images/PlaneLZ.png'/> 
 
 
 ## Prerequisites
