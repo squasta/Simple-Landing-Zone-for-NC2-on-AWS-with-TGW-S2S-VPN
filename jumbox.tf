@@ -21,12 +21,30 @@ resource "aws_route_table_association" "Terra-Private-Route-Table-Association-Ju
 }
 
 
+data "aws_ami" "Terra-Windows_Latest" {
+  count       = var.ENABLE_JUMBOX_VM
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2025-English-Full-Base-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+
 resource "aws_instance" "Terra-Jumbox-Windows-Server" {
     # Change to a valid Windows Server AMI ID for your region
     # to get latest Windows Server AMI ID, visit https://aws.amazon.com/windows/ and click on "Launch instance"
     # aws ec2 describe-images --region eu-central-1 --owners amazon --filters "Name=name,Values=Windows_Server-2022-English-Full-Base-*" "Name=state,Values=available" --query "Images | sort_by(@, &CreationDate) | [-1].ImageId" --output text
     count         = var.ENABLE_JUMBOX_VM
-    ami           = var.WINDOWS_SERVER_2025_ENGLISHFULLBASE_AMI_ID   
+    # ami           = var.WINDOWS_SERVER_2025_ENGLISHFULLBASE_AMI_ID   
+    ami          = data.aws_ami.Terra-Windows_Latest[0].id
     instance_type = "t3.medium"     # t3.medium has 8 GB of RAM
 
     subnet_id = aws_subnet.Terra-Private-Subnet-Jumpbox[0].id
@@ -42,6 +60,11 @@ resource "aws_instance" "Terra-Jumbox-Windows-Server" {
     #                         # Add any custom PowerShell script you want to run on startup
     #                         </powershell>
     #                         EOF
+
+  # Do not replace the instance just because a newer AMI becomes "latest"
+  lifecycle {
+    ignore_changes = [ami]
+  }
 }
 
 resource "aws_security_group" "Terra-Jumbox-sg" {

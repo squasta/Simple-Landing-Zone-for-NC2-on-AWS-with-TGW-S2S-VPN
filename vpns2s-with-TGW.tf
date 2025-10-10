@@ -46,7 +46,7 @@ resource "aws_ec2_transit_gateway_route" "Terra-TGW-Route-To-On-Prem" {
 # Attach the main VPC to the Transit Gateway
 # cf. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment
 resource "aws_ec2_transit_gateway_vpc_attachment" "Terra-TGW-Attachment" {
-  subnet_ids         = [aws_subnet.Terra-Private-Subnet-FVN.id]
+  subnet_ids         = [aws_subnet.Terra-Private-Subnet-TGW.id]
   transit_gateway_id = aws_ec2_transit_gateway.Terra-TGW.id
   vpc_id             = aws_vpc.Terra-VPC.id
   tags = {

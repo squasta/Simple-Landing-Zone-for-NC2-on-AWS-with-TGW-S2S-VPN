@@ -73,10 +73,19 @@ variable "PRIVATE_SUBNET_FVN" {
   default     = "10.0.5.0/24"
 }
 
+
+# Subnet used for Transit Gateway (TGW)
+# CIDR requirements: /16 and /25 including both
+variable "PRIVATE_SUBNET_TGW" {
+  description = "The CIDR block for the TGW subnet"
+  default     = "10.0.6.0/24"
+}
+
+
 # Subnet for Jumpbox VMs
 variable "PRIVATE_SUBNET_JUMPBOX" {
   description = "The CIDR block for the Jumpbox subnet"
-  default     = "10.0.6.0/24"  
+  default     = "10.0.8.0/24"  
 }
 
 # Windows Server 2022 English Full Base AMI ID for Jumbox VM
@@ -132,3 +141,4 @@ variable "TUNNEL1_PRESHARED_KEY" {
   description = "Shared Key for VPN Site to Site"
   sensitive = true
 }
+

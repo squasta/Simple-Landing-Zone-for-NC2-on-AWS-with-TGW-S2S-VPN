@@ -109,6 +109,24 @@ resource "aws_subnet" "Terra-Private-Subnet-FVN" {
 }
 
 
+
+# One subnet for Transit Gateway attachment
+# This subnet cannot be shared and only one cluster can be deployed per VPC with Transit Gateway
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet  
+
+resource "aws_subnet" "Terra-Private-Subnet-TGW" {
+  vpc_id                  = aws_vpc.Terra-VPC.id
+  cidr_block              = var.PRIVATE_SUBNET_TGW  # CIDR requirements: /16 and /25 including both
+  availability_zone       = join("", [var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])                      
+
+  tags = {
+    ## join function https://developer.hashicorp.com/terraform/language/functions/join
+    Name = join("", ["NC2-PrivateSubnet-TGW-",var.AWS_REGION,var.AWS_AVAILABILITY_ZONE])
+  }
+}
+
+
+
 # Internet Gateway
 # To establish communication between your VPC and the internet
 # Instances in the public subnet can communicate directly with the Internet
@@ -231,6 +249,17 @@ resource "aws_route_table_association" "Terra-Private-Route-Table-Association-PC
 # Route Table Association for Private Subnet FVN
 resource "aws_route_table_association" "Terra-Private-Route-Table-Association-FVN" {
   subnet_id      = aws_subnet.Terra-Private-Subnet-FVN.id
+  route_table_id = aws_route_table.Terra-Private-Route-Table.id
+}
+
+# Main route table association for VPC (update 8 october 2025)
+# cf. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/main_route_table_association
+# This resource is used to associate the main route table with the VPC.
+# By default, each VPC has a main route table that controls the routing for all sub
+# nets that are not explicitly associated with any other route table.
+# In this case, we are associating the main route table with the VPC created earlier
+resource "aws_main_route_table_association" "a" {
+  vpc_id         = aws_vpc.Terra-VPC.id
   route_table_id = aws_route_table.Terra-Private-Route-Table.id
 }
 
