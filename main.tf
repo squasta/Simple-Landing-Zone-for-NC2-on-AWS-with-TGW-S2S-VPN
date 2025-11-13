@@ -33,6 +33,7 @@ resource "aws_vpc" "Terra-VPC" {
   # cf. https://docs.aws.amazon.com/vpc/latest/userguide/vpc-dns.html#vpc-dns-support
   enable_dns_hostnames = true
   enable_dns_support = true
+  main_route_table_id = aws_route_table.Terra-Private-Route-Table.id
 
   tags = {
     Name = join("", [var.VPC_NAME,"-",var.AWS_REGION])
