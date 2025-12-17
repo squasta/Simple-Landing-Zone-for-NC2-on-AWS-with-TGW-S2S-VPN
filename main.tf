@@ -33,7 +33,6 @@ resource "aws_vpc" "Terra-VPC" {
   # cf. https://docs.aws.amazon.com/vpc/latest/userguide/vpc-dns.html#vpc-dns-support
   enable_dns_hostnames = true
   enable_dns_support = true
-  main_route_table_id = aws_route_table.Terra-Private-Route-Table.id
 
   tags = {
     Name = join("", [var.VPC_NAME,"-",var.AWS_REGION])
@@ -230,6 +229,18 @@ resource "aws_route_table" "Terra-Private-Route-Table" {
     Name = "NC2-Route-Table-Private"
   }
 }
+# Main route table association for VPC (update 8 october 2025)
+# cf. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/main_route_table_association
+# This resource is used to associate the main route table with the VPC.
+# By default, each VPC has a main route table that controls the routing for all sub
+# nets that are not explicitly associated with any other route table.
+# In this case, we are associating the main route table with the VPC created earlier
+# Main Route Table Association for the VPC to the Private Route Table
+# cf. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/main_route_table_association
+resource "aws_main_route_table_association" "Terra-Main-Route-Table-Association" {
+  vpc_id         = aws_vpc.Terra-VPC.id
+  route_table_id = aws_route_table.Terra-Private-Route-Table.id
+}
 
 
 # Route Table Association for Private Subnet Management
@@ -253,16 +264,7 @@ resource "aws_route_table_association" "Terra-Private-Route-Table-Association-FV
   route_table_id = aws_route_table.Terra-Private-Route-Table.id
 }
 
-# Main route table association for VPC (update 8 october 2025)
-# cf. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/main_route_table_association
-# This resource is used to associate the main route table with the VPC.
-# By default, each VPC has a main route table that controls the routing for all sub
-# nets that are not explicitly associated with any other route table.
-# In this case, we are associating the main route table with the VPC created earlier
-resource "aws_main_route_table_association" "a" {
-  vpc_id         = aws_vpc.Terra-VPC.id
-  route_table_id = aws_route_table.Terra-Private-Route-Table.id
-}
+
 
 
 

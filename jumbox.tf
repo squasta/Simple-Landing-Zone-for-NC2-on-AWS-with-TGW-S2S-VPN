@@ -101,21 +101,21 @@ resource "aws_network_interface_sg_attachment" "Terra-sg-attachment" {
 # Create a Network Load Balancer (NLB)
 resource "aws_lb" "Terra-NLB-Jumbox" {
   count              = var.ENABLE_NLB_JUMBOX_VM
-  name               = "NLB-Jumbox"
+  name               = "NLB-Jumbox-Stan"
   internal           = false
   load_balancer_type = "network"
   subnets            = [aws_subnet.Terra-Public-Subnet.id]
   security_groups    = [aws_security_group.Terra-Jumbox-sg[0].id]
 
   tags = {
-    Name = "NLB-Jumbox"
+    Name = "NLB-Jumpbox-Stan"
   }
 }
 
 # Create a Target Group for the EC2 instance
 resource "aws_lb_target_group" "Terra-LB-Target-Group-Jumbox" {
   count       = var.ENABLE_NLB_JUMBOX_VM
-  name        = "rdp-target-group"
+  name        = "rdp-target-group-stan"
   port        = 3389
   protocol    = "TCP"
   vpc_id      = aws_vpc.Terra-VPC.id
